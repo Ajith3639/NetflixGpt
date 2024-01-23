@@ -1,37 +1,175 @@
 import Header from "./Header";
 import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { DevTool } from "@hookform/devtools";
+import { NETFLIX_BACKGROUND_IMAGE_URL } from "../utilities/CONSTANTS";
+import { auth } from "../firebase.config";
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+} from "firebase/auth";
+
 const Login = () => {
-    const [signUp, setSignUp] = useState(false); 
-    const togglesSignUp = () => {
-        setSignUp(!signUp);
+  const [signUp, setSignUp] = useState(false);
+  const form = useForm();
+  const { register, control, handleSubmit, formState } = form;
+  const togglesSignUp = () => {
+    setSignUp(!signUp);
+  };
+  const { errors } = formState;
+  const onSubmit = (data) => {
+    if (!errors.length) {
+      if (signUp) {
+        createUserWithEmailAndPassword(auth, data.email, data.password)
+          .then((userCredential) => {
+            const user = userCredential.user;
+            console.log(user);
+          })
+          .catch((error) => {
+            const errorCode = error.code;
+            const errorMessage = error.message;
+            console.log(errorMessage, errorCode);
+          });
+      } else {
+        signInWithEmailAndPassword(auth, data.email, data.password)
+          .then((userCredential) => {
+            const user = userCredential.user;
+            console.log(user);
+          })
+          .catch((error) => {
+            const errorCode = error.code;
+            const errorMessage = error.message;
+            console.log(errorMessage, errorCode);
+          });
+      }
     }
-    return (
-        <div >
-            <Header />
-            <div className="absolute">
-                <img
-                    src="https://assets.nflxext.com/ffe/siteui/vlv3/c38a2d52-138e-48a3-ab68-36787ece46b3/eeb03fc9-99c6-438e-824d-32917ce55783/IN-en-20240101-popsignuptwoweeks-perspective_alpha_website_large.jpg"
-                    alt="background"
+  };
+  return (
+    <div>
+      <Header />
+      <div className="absolute">
+        <img src={NETFLIX_BACKGROUND_IMAGE_URL} alt="background" />
+      </div>
+      <div className="absolute w-3/12 bg-black  mx-auto left-0 right-0 my-36 bg-opacity-90 rounded-md">
+        <form
+          action=""
+          onSubmit={handleSubmit(onSubmit)}
+          className="p-16  pb-20 pl-18  pr-20"
+          noValidate
+        >
+          <h1 className="text-3xl font-bold mt-1 mb-5 text-white">
+            {signUp ? "Sign up" : "Sign in"}
+          </h1>
+          {signUp ? (
+            <div>
+              <div>
+                {" "}
+                <input
+                  type="text"
+                  placeholder="Name"
+                  className="p-3 my-2 rounded-md w-full  bg-gray-200"
+                  {...register("name", {
+                    required: "Username is required",
+                    minLength: {
+                      value: 1,
+                      message: "Username should be atleast 1 character1",
+                    },
+                  })}
                 />
+                <span className="text-sm text-red-500">
+                  {errors?.name?.message}{" "}
+                </span>
+              </div>
+
+              <input
+                type="text"
+                placeholder="Phone"
+                className="p-3 my-2 rounded-md w-full  bg-gray-200"
+                {...register("phone")}
+              />
             </div>
-            <div className="absolute w-3/12 bg-black  mx-auto left-0 right-0 my-36 bg-opacity-90 rounded-md">
-                <form action="" className="p-16  pb-20 pl-18  pr-20">
-                    <h1 className="text-3xl font-bold mt-1 mb-5 text-white">{signUp?"Sign up":"Sign in"}</h1>
-                  {signUp?  <div>  <input type="text" placeholder="Name" className="p-3 my-2 rounded-md w-full bg-gray-200" />
-                    <input type="password" placeholder="Phone" className="p-3 my-2 rounded-md w-full  bg-gray-200" /></div>:null}
-                  
-                    <input type="text" placeholder="Email" className="p-3 my-2 rounded-md w-full bg-gray-200" />
-                    <input type="password" placeholder="Password" className="p-3 my-2 rounded-md w-full  bg-gray-200" />
-                    <button type="submit" className="p-3 mx-auto mt-8 bg-red-600  text-white rounded-md w-full">{signUp?"Sign up":"Sign in"}</button>
-                    <span className="text-gray-500 text-sm block ml-[220px] mt-2">Forgot password?</span>
-                    {!signUp&&<p className="text-gray-500 block pt-10 ">New to Netflix? <span className="text-white cursor-pointer" onClick={togglesSignUp}>Sign up now.</span> </p>}
-                    {signUp&&<p className="text-gray-500 block pt-10 ">Already a user? <span className="text-white cursor-pointer" onClick={togglesSignUp}>Sign in.</span> </p>}
+          ) : null}
+          <div>
+            {" "}
+            <input
+              type="email"
+              placeholder="Email"
+              className="p-3 my-2 rounded-md w-full bg-gray-200"
+              {...register("email", {
+                required: "Email is required",
+                minLength: {
+                  value: 1,
+                  message: "Email should be atleast 1 character1",
+                },
+                pattern: {
+                  value: /^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$/i,
+                  message: "Invalid email address",
+                },
+              })}
+            />
+            <span className="text-sm text-red-500">
+              {errors?.email?.message}{" "}
+            </span>
+          </div>
+          <div>
+            {" "}
+            <input
+              type="password"
+              placeholder="Password"
+              className="p-3 my-2 rounded-md w-full  bg-gray-200"
+              {...register("password", {
+                required: "Password is required",
+                minLength: {
+                  value: 1,
+                  message: "Password should be atleast 1 character1",
+                },
+                pattern: {
+                  value: /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/,
+                  message:
+                    "Password should contain atleast 8 characters, 1 letter and 1 number",
+                },
+              })}
+            />
+            <span className="text-sm text-red-500">
+              {errors?.password?.message}{" "}
+            </span>
+          </div>
 
-            </form>
-            </div>          
-             
-
-        </div>
-    );
-}
+          <button
+            type="submit"
+            className="p-3 mx-auto mt-8 bg-red-600  text-white rounded-md w-full"
+          >
+            {signUp ? "Sign up" : "Sign in"}
+          </button>
+          <span className="text-gray-500 text-sm block ml-[220px] mt-2">
+            Forgot password?
+          </span>
+          {!signUp && (
+            <p className="text-gray-500 block pt-10 ">
+              New to Netflix?{" "}
+              <span
+                className="text-white cursor-pointer"
+                onClick={togglesSignUp}
+              >
+                Sign up now.
+              </span>{" "}
+            </p>
+          )}
+          {signUp && (
+            <p className="text-gray-500 block pt-10 ">
+              Already a user?{" "}
+              <span
+                className="text-white cursor-pointer"
+                onClick={togglesSignUp}
+              >
+                Sign in.
+              </span>{" "}
+            </p>
+          )}
+        </form>
+        <DevTool control={control} />
+      </div>
+    </div>
+  );
+};
 export default Login;
