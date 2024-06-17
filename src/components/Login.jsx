@@ -1,5 +1,6 @@
 import Header from "./Header";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { DevTool } from "@hookform/devtools";
 import { NETFLIX_BACKGROUND_IMAGE_URL } from "../utilities/CONSTANTS";
@@ -8,6 +9,10 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
 } from "firebase/auth";
+import { onAuthStateChanged } from "firebase/auth";
+import { useDispatch } from "react-redux";
+import { addUser, removeUser } from "../store/usersSlice";
+import { useEffect } from "react";
 
 const Login = () => {
   const [signUp, setSignUp] = useState(false);
@@ -16,14 +21,30 @@ const Login = () => {
   const togglesSignUp = () => {
     setSignUp(!signUp);
   };
+
   const { errors } = formState;
+
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        const { uid, email, displayName } = user;
+        dispatch(addUser({ uid, email, displayName }));
+      } else {
+        dispatch(removeUser());
+      }
+    });
+  }, []);
+
   const onSubmit = (data) => {
     if (!errors.length) {
       if (signUp) {
         createUserWithEmailAndPassword(auth, data.email, data.password)
           .then((userCredential) => {
             const user = userCredential.user;
-            console.log(user);
+            navigate("/browse");
           })
           .catch((error) => {
             const errorCode = error.code;
@@ -34,7 +55,7 @@ const Login = () => {
         signInWithEmailAndPassword(auth, data.email, data.password)
           .then((userCredential) => {
             const user = userCredential.user;
-            console.log(user);
+            navigate("/browse");
           })
           .catch((error) => {
             const errorCode = error.code;
@@ -57,6 +78,9 @@ const Login = () => {
           className="p-16  pb-20 pl-18  pr-20"
           noValidate
         >
+          <div className="p-2 mb-4 bg-red-700 text-white rounded	">
+            The account with the given email already exists
+          </div>
           <h1 className="text-3xl font-bold mt-1 mb-5 text-white">
             {signUp ? "Sign up" : "Sign in"}
           </h1>
