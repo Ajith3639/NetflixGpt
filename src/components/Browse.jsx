@@ -1,10 +1,11 @@
+import Header from "./Header";
 
 const Browse = () => {
-    return (
-        <div>
-            {/* Your component code here */}
-        </div>
-    );
+  return (
+    <div>
+      <Header />{" "}
+    </div>
+  );
 };
 
 export default Browse;

@@ -1,6 +1,5 @@
 import Header from "./Header";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { DevTool } from "@hookform/devtools";
 import { NETFLIX_BACKGROUND_IMAGE_URL } from "../utilities/CONSTANTS";
@@ -8,11 +7,10 @@ import { auth } from "../firebase.config";
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
+  updateProfile,
 } from "firebase/auth";
-import { onAuthStateChanged } from "firebase/auth";
 import { useDispatch } from "react-redux";
-import { addUser, removeUser } from "../store/usersSlice";
-import { useEffect } from "react";
+import { addUser } from "../store/usersSlice";
 
 const Login = () => {
   const [signUp, setSignUp] = useState(false);
@@ -25,37 +23,31 @@ const Login = () => {
   const { errors } = formState;
 
   const dispatch = useDispatch();
-  const navigate = useNavigate();
 
-  useEffect(() => {
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        const { uid, email, displayName } = user;
-        dispatch(addUser({ uid, email, displayName }));
-      } else {
-        dispatch(removeUser());
-      }
-    });
-  }, []);
-
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
     if (!errors.length) {
       if (signUp) {
-        createUserWithEmailAndPassword(auth, data.email, data.password)
-          .then((userCredential) => {
-            const user = userCredential.user;
-            navigate("/browse");
-          })
-          .catch((error) => {
-            const errorCode = error.code;
-            const errorMessage = error.message;
-            console.log(errorMessage, errorCode);
+        try {
+          const userCredential = await createUserWithEmailAndPassword(
+            auth,
+            data.email,
+            data.password
+          );
+          const user = userCredential.user;
+
+          await updateProfile(auth.currentUser, {
+            displayName: data.name,
           });
+
+          const { uid, email, displayName } = user;
+          dispatch(addUser({ uid, email, displayName }));
+        } catch (error) {
+          console.error(error);
+        }
       } else {
         signInWithEmailAndPassword(auth, data.email, data.password)
           .then((userCredential) => {
             const user = userCredential.user;
-            navigate("/browse");
           })
           .catch((error) => {
             const errorCode = error.code;
