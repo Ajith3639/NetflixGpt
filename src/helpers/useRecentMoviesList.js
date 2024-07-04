@@ -13,11 +13,11 @@ const useRecentMoviesList = () => {
 
   const getNowPlayingMovies = async () => {
     try {
-      const latestMovieList = await fetch(
+      const nowPlayingMovies = await fetch(
         "https://api.themoviedb.org/3/movie/now_playing?page=1",
         API_OPTIONS
       );
-      const response = await latestMovieList.json();
+      const response = await nowPlayingMovies.json();
       dispatch(addRecentMovies(response.results));
     } catch (error) {
       console.log(error);
@@ -26,11 +26,11 @@ const useRecentMoviesList = () => {
 
   const getPopularMovies = async () => {
     try {
-      const latestMovieList = await fetch(
-        "https://api.themoviedb.org/3/movie/popular?language=en-US&page=1",
+      const popularMovies = await fetch(
+        "https://api.themoviedb.org/3/movie/popular?&page=1",
         API_OPTIONS
       );
-      const response = await latestMovieList.json();
+      const response = await popularMovies.json();
       dispatch(addPopularMovies(response.results));
     } catch (error) {
       console.log(error);
@@ -38,11 +38,11 @@ const useRecentMoviesList = () => {
   };
   const getTopRatedMovies = async () => {
     try {
-      const latestMovieList = await fetch(
-        "https://api.themoviedb.org/3/movie/top_rated?language=en-US&page=1",
+      const topRatedMovies = await fetch(
+        "https://api.themoviedb.org/3/movie/top_rated?&page=1",
         API_OPTIONS
       );
-      const response = await latestMovieList.json();
+      const response = await topRatedMovies.json();
       dispatch(addTopRatedMovies(response.results));
     } catch (error) {
       console.log(error);
@@ -50,11 +50,11 @@ const useRecentMoviesList = () => {
   };
   const getUpcomingMovies = async () => {
     try {
-      const latestMovieList = await fetch(
-        "https://api.themoviedb.org/3/movie/upcoming?language=en-US&page=1",
+      const upcomingMovies = await fetch(
+        "https://api.themoviedb.org/3/movie/upcoming?&page=1",
         API_OPTIONS
       );
-      const response = await latestMovieList.json();
+      const response = await upcomingMovies.json();
       dispatch(addUpcomingMovies(response.results));
     } catch (error) {
       console.log(error);
