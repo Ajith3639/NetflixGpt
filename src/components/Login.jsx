@@ -16,6 +16,7 @@ const Login = () => {
   const [signUp, setSignUp] = useState(false);
   const form = useForm();
   const { register, control, handleSubmit, formState } = form;
+  const [loginError, setLoginError] = useState(false);
   const togglesSignUp = () => {
     setSignUp(!signUp);
   };
@@ -49,10 +50,8 @@ const Login = () => {
           .then((userCredential) => {
             const user = userCredential.user;
           })
-          .catch((error) => {
-            const errorCode = error.code;
-            const errorMessage = error.message;
-            console.log(errorMessage, errorCode);
+          .catch(() => {
+            setLoginError(true);
           });
       }
     }
@@ -70,9 +69,11 @@ const Login = () => {
           className="p-16  pb-20 pl-18  pr-20"
           noValidate
         >
-          <div className="p-2 mb-4 bg-red-700 text-white rounded	">
-            The account with the given email already exists
-          </div>
+          {loginError && (
+            <div className="p-2 mb-4 bg-red-700 text-white rounded	">
+              The account credentials is invalid
+            </div>
+          )}
           <h1 className="text-3xl font-bold mt-1 mb-5 text-white">
             {signUp ? "Sign up" : "Sign in"}
           </h1>
@@ -157,9 +158,7 @@ const Login = () => {
           >
             {signUp ? "Sign up" : "Sign in"}
           </button>
-          <span className="text-gray-500 text-sm block ml-[220px] mt-2">
-            Forgot password?
-          </span>
+
           {!signUp && (
             <p className="text-gray-500 block pt-10 ">
               New to Netflix?{" "}
