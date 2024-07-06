@@ -1,7 +1,7 @@
 import React from "react";
 
 import { useSelector } from "react-redux";
-import useTrailerId from "../helpers/useTrailerId";
+import useTrailerId from "../../helpers/useTrailerId";
 
 const VideoTrailer = ({ id }) => {
   useTrailerId(id);

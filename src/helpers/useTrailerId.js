@@ -1,5 +1,5 @@
 import { addTrailerId } from "../store/moviesSlice";
-import { API_OPTIONS } from "../CONSTANTS";
+import { API_OPTIONS } from "../utilities/CONSTANTS";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 

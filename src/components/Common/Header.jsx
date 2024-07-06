@@ -1,8 +1,8 @@
 import { signOut } from "firebase/auth";
-import { auth } from "../firebase.config";
+import { auth } from "../../firebase.config";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { removeUser, addUser } from "../store/usersSlice";
+import { removeUser, addUser } from "../../store/usersSlice";
 import { onAuthStateChanged } from "firebase/auth";
 import { useEffect, useState } from "react";
 

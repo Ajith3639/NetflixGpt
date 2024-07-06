@@ -2,15 +2,15 @@ import Header from "./Header";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { DevTool } from "@hookform/devtools";
-import { NETFLIX_BACKGROUND_IMAGE_URL } from "../utilities/CONSTANTS";
-import { auth } from "../firebase.config";
+import { NETFLIX_BACKGROUND_IMAGE_URL } from "../../utilities/CONSTANTS";
+import { auth } from "../../firebase.config";
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   updateProfile,
 } from "firebase/auth";
 import { useDispatch } from "react-redux";
-import { addUser } from "../store/usersSlice";
+import { addUser } from "../../store/usersSlice";
 
 const Login = () => {
   const [signUp, setSignUp] = useState(false);

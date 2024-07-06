@@ -1,12 +1,12 @@
 import React, { useRef } from "react";
-import { openai } from "../openai.config";
-import { API_OPTIONS } from "../CONSTANTS";
+import { openai } from "../../openai.config";
+import { API_OPTIONS } from "../../utilities/CONSTANTS";
 import { useDispatch, useSelector } from "react-redux";
 import {
   addSearchResults,
   removeSearchResults,
   setLoader,
-} from "../store/moviesSlice";
+} from "../../store/moviesSlice";
 import GptSearchResults from "./GptSearchResults";
 const GptSearchBar = () => {
   const searchText = useRef("");

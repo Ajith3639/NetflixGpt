@@ -1,9 +1,9 @@
 import React, { useEffect } from "react";
-import Header from "./Header";
+import Header from "../Common/Header";
 import GptSearchBar from "./GptSearchBar";
-import { NETFLIX_BACKGROUND_IMAGE_URL } from "../utilities/CONSTANTS";
+import { NETFLIX_BACKGROUND_IMAGE_URL } from "../../utilities/CONSTANTS";
 import { useDispatch } from "react-redux";
-import { removeSearchResults } from "../store/moviesSlice";
+import { removeSearchResults } from "../../store/moviesSlice";
 
 const GptSearch = () => {
   const dispatch = useDispatch();

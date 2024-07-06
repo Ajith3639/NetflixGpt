@@ -1,4 +1,4 @@
-import { API_OPTIONS } from "../CONSTANTS";
+import { API_OPTIONS } from "../utilities/CONSTANTS";
 import { useDispatch } from "react-redux";
 import {
   addRecentMovies,

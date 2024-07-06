@@ -1,7 +1,7 @@
 import Header from "./Header";
-import useRecentMoviesList from "../helpers/useRecentMoviesList";
-import MainContainer from "./MainContainer";
-import SecondaryContainer from "./SecondaryContainer";
+import useRecentMoviesList from "../../helpers/useRecentMoviesList";
+import MainContainer from "../MainContainer/MainContainer";
+import SecondaryContainer from "../SecondaryContainer/SecondaryContainer";
 
 const Browse = () => {
   useRecentMoviesList();
